@@ -101,9 +101,7 @@ namespace MarsRover.Infrastructure
                 throw new Exception(validator.Errors.Select(a => a.ErrorMessage).FirstOrDefault());
             }
 
-            var commandLetterList = dto.CommandLetters.ToArray();
-
-            foreach (var commandLetter in commandLetterList)
+            foreach (var commandLetter in dto.CommandLetters)
             {
                 var command = _commandFactory.GetCommand(commandLetter);
                 command.Execute(this);
