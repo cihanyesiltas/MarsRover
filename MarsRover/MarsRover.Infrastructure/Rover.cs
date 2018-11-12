@@ -61,21 +61,49 @@ namespace MarsRover.Infrastructure
 
         public void MoveForward()
         {
+            var newCoordinate = GetNewCoordinate();
+
+            if (CheckRIPList(newCoordinate))
+            {
+                Console.WriteLine("Can't the that");
+                return;
+            }
+
+            var isInBoundaries = _plateau.CheckBoundaries(newCoordinate);
+            if (!isInBoundaries)
+            {
+                Console.WriteLine("RIP");
+                _plateau.SetOutOfCoordinate(newCoordinate);
+            }
+
+            _coordinate = newCoordinate;
+        }
+
+        public bool CheckRIPList(Coordinate coordinate)
+        {
+            return _plateau.GetOutOfBoundaryList.Any(a => a.X == coordinate.X && a.Y == coordinate.Y);
+        }
+
+        private Coordinate GetNewCoordinate()
+        {
+            var newCoordinate = new Coordinate { X = _coordinate.X, Y = _coordinate.Y };
             switch (_orientation)
             {
                 case Orientation.North:
-                    _coordinate.Y++;
+                    newCoordinate.Y++;
                     break;
                 case Orientation.East:
-                    _coordinate.X++;
+                    newCoordinate.X++;
                     break;
                 case Orientation.South:
-                    _coordinate.Y--;
+                    newCoordinate.Y--;
                     break;
                 case Orientation.West:
-                    _coordinate.X--;
+                    newCoordinate.X--;
                     break;
             }
+
+            return newCoordinate;
         }
 
         public void SetPosition(SetPositionDTO dto)
@@ -88,7 +116,7 @@ namespace MarsRover.Infrastructure
 
             var splittedPosition = dto.PositionLetter.Split(' ');
 
-            _coordinate = new Coordinate {X = int.Parse(splittedPosition[0]), Y = int.Parse(splittedPosition[1])};
+            _coordinate = new Coordinate { X = int.Parse(splittedPosition[0]), Y = int.Parse(splittedPosition[1]) };
 
             _orientation = splittedPosition[2].GetEnumByDescription<Orientation>();
         }

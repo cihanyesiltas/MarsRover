@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MarsRover.Infrastructure.Validators;
 
@@ -14,6 +15,21 @@ namespace MarsRover.Infrastructure
         {
             SetUpperRightCoordinate(upperRigthCoordinateLetter);
             InitiliazeDefaultLowerLeftCoordinate();
+            GetOutOfBoundaryList = new List<Coordinate>();
+        }
+
+        public bool CheckBoundaries(Coordinate coordinate)
+        {
+            return LowerLeftCoordinate.X <= coordinate.X && LowerLeftCoordinate.Y <= coordinate.Y
+                                                         && UpperRightCoordinate.X >= coordinate.X &&
+                                                         UpperRightCoordinate.Y >= coordinate.Y;
+        }
+
+        public List<Coordinate> GetOutOfBoundaryList { get; }
+
+        public void SetOutOfCoordinate(Coordinate coordinate)
+        {
+            GetOutOfBoundaryList.Add(coordinate);
         }
 
         private void SetUpperRightCoordinate(string upperRigthCoordinateLetter)
